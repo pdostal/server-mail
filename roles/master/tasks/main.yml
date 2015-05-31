@@ -5,3 +5,25 @@
 - name: Enable OpenDKIM (FreeBSD)
   when: ansible_distribution == 'FreeBSD'
   lineinfile: dest=/etc/rc.conf regexp=^milteropendkim_enable= line=milteropendkim_enable=YES
+- name: Create OpenDKIM user
+  user: >
+    name=opendkim
+    createhome=no
+    comment=OpenDKIM
+    shell=/usr/sbin/nologin
+    home=/usr/local/etc/mail/
+- name: Creates OpenDKIM directory
+  file: >
+    path=/var/db/opendkim
+    state=directory
+    owner=opendkim
+    group=opendkim
+    mode=0770
+- name: Paste OpenDKIM config
+  notify: restart opendkim
+  template: >
+    src=opendkim.conf
+    dest=/usr/local/etc/mail/opendkim.conf
+    owner=opendkim
+    group=opendkim
+    mode=0770
