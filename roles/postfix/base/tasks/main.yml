@@ -1,0 +1,15 @@
+- name: Install Postfix (Debian)
+  when: ansible_distribution == 'Debian'
+  apt: name=postfix state=latest force=yes
+  notify: restart postfix
+- name: Install Postfix (CentOS)
+  when: ansible_distribution == 'CentOS'
+  yum: name=postfix state=latest
+  notify: restart postfix
+- name: Install Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  pkgng: name=postfix state=present
+  notify: restart postfix
+- name: Enable Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^postfix_enable= line=postfix_enable=YES
