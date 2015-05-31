@@ -27,3 +27,19 @@
     owner=opendkim
     group=opendkim
     mode=0770
+
+- name: Install Dovecot (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  pkgng: name=dovecot,dovecot-sieve state=present
+  notify: restart dovecot
+- name: Enable Dovecot (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^dovecot_enable= line=dovecot_enable=YES
+- name: Paste Dovecot config
+  notify: restart dovecot
+  template: >
+    src=dovecot.conf
+    dest=/usr/local/etc/dovecot.conf
+    owner=dovecot
+    group=dovecot
+    mode=0770
