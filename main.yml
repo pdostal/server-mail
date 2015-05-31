@@ -2,6 +2,6 @@
   hosts: all
   sudo: true
   roles:
-  - { role: postfix/base }
-  - { role: postfix/master, when: ansible_hostname in groups.master }
-  - { role: postfix/slave, when: ansible_hostname in groups.slave }
+  - { role: base }
+  - { role: master, when: ansible_hostname in groups.master }
+  - { role: slave, when: ansible_hostname in groups.slave }
