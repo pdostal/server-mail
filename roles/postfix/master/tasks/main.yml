@@ -1,0 +1,7 @@
+- name: Install OpenDKIM (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  pkgng: name=opendkim state=present
+  notify: restart opendkim
+- name: Enable OpenDKIM (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^milteropendkim_enable= line=milteropendkim_enable=YES
