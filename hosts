@@ -1,6 +1,6 @@
 [master]
-rhubarb
+rhubarb  origin=mx1
 
 [slave]
-cucumber
-sorrel
+cucumber  origin=mx3
+sorrel  origin=mx2

@@ -1,0 +1,50 @@
+myorigin = {{ origin }}
+mydomain = pdostal.cz
+myhostname = $myorigin.$mydomain
+relay_domains = pdostal.cz
+
+inet_interfaces = all
+inet_protocols = all
+
+mynetworks = 127.0.0.0/8, [::1]/128
+
+smtpd_etrn_restrictions =
+  sleep 5,
+ #check_etrn_access hash:/etc/postfix/etrn,
+  permit_mynetworks,
+ #reject
+  permit
+
+smtpd_sender_restrictions =
+  permit_mynetworks,
+  reject_non_fqdn_sender,
+  reject_unknown_sender_domain,
+  permit
+
+smtpd_recipient_restrictions =
+  permit_mynetworks,
+  reject_non_fqdn_recipient,
+ #permit_mx_backup,
+  permit_auth_destination,
+  reject
+
+message_size_limit = 102400000
+mailbox_size_limit = 2048000000
+
+smtpd_delay_reject = no
+smtpd_error_sleep_time = 30
+smtpd_soft_error_limit = 10
+smtpd_hard_error_limit = 20
+
+smtpd_helo_required = yes
+disable_vrfy_command = yes
+
+biff = yes
+delay_warning_time = 4h
+
+smtpd_tls_security_level = encrypt
+smtpd_tls_auth_only = yes
+smtpd_tls_cert_file = /etc/ssl/certs/mail.pem
+smtpd_tls_key_file = /etc/ssl/private/mail.pem
+smtpd_tls_received_header = yes
+smtpd_tls_loglevel = 1

@@ -43,3 +43,12 @@
     owner=dovecot
     group=dovecot
     mode=0770
+
+- name: Paste Postfix config
+  notify: restart postfix
+  template: >
+    src=main.cf
+    dest=/usr/local/etc/postfix/main.cf
+    owner=root
+    group=wheel
+    mode=0644

@@ -1,0 +1,8 @@
+- name: Paste Postfix config
+  notify: restart postfix
+  template: >
+    src=main.cf
+    dest=/etc/postfix/main.cf
+    owner=root
+    group=root
+    mode=0644

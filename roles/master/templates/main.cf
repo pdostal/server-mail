@@ -1,0 +1,90 @@
+myorigin = {{ origin }}
+mydomain = pdostal.cz
+myhostname = $myorigin.$mydomain
+mydestination = $myhostname, vps, localhost
+
+mailbox_command = /usr/lib/dovecot/deliver
+
+inet_interfaces = all
+inet_protocols = all
+
+virtual_mailbox_domains = pdostal.cz, lsimral.cz, jsindelar.cz
+virtual_mailbox_base = /var/mail/virtual
+virtual_mailbox_maps = hash:/etc/postfix/vmailbox
+virtual_alias_maps = hash:/etc/postfix/virtual
+
+#local_transport = error:no local mailboxes
+local_transport = local:$myhostname
+local_recipient_maps = proxy:unix:passwd.byname $alias_maps
+
+#postalias /etc/aliases
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+smtp_generic_maps = hash:/etc/postfix/generic
+sender_canonical_maps = hash:/etc/postfix/canonical
+
+home_mailbox = /var/mail/%u/
+
+mynetworks = 127.0.0.0/8, [::1]/128
+
+smtpd_client_restrictions =
+  permit_mynetworks,
+  permit_sasl_authenticated,
+  check_sender_access hash:/etc/postfix/access,
+  permit
+
+smtpd_sender_restrictions =
+  permit_mynetworks,
+  permit_sasl_authenticated,
+  reject_non_fqdn_sender,
+  reject_unknown_sender_domain,
+  check_sender_access hash:/etc/postfix/access,
+  permit
+
+smtpd_recipient_restrictions =
+  permit_mynetworks,
+  permit_sasl_authenticated,
+  reject_non_fqdn_recipient,
+  reject_unknown_recipient_domain,
+  check_recipient_access hash:/etc/postfix/access,
+  reject_unauth_destination,
+  check_policy_service unix:private/policyd-spf,
+  permit
+
+virtual_minimum_uid = 100
+virtual_uid_maps = static:100
+virtual_gid_maps = static:100
+
+message_size_limit = 102400000
+mailbox_size_limit = 2048000000
+
+milter_protocol = 2
+milter_default_action = accept
+smtpd_milters = inet:localhost:12301
+non_smtpd_milters = inet:localhost:12301
+
+smtpd_delay_reject = no
+smtpd_error_sleep_time = 30
+smtpd_soft_error_limit = 10
+smtpd_hard_error_limit = 20
+policyd-spf_time_limit = 3600
+
+smtpd_helo_required = yes
+disable_vrfy_command = yes
+
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+broken_sasl_auth_clients = yes
+
+biff = yes
+delay_warning_time = 4h
+
+#smtpd_tls_security_level = encrypt
+#smtpd_tls_auth_only = yes
+smtpd_tls_security_level = may
+smtpd_tls_auth_only = no
+smtpd_tls_cert_file = /etc/ssl/certs/mail.pem
+smtpd_tls_key_file = /etc/ssl/private/mail.pem
+smtpd_tls_received_header = yes
+smtpd_tls_loglevel = 1
