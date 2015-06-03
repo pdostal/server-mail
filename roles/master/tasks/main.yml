@@ -25,7 +25,7 @@
   notify: restart dovecot
   template: >
     src=dovecot.conf
-    dest=/usr/local/etc/dovecot.conf
+    dest=/usr/local/etc/dovecot/dovecot.conf
     owner=dovecot
     group=dovecot
     mode=0770

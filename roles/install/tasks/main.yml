@@ -24,7 +24,7 @@
 
 - name: Install Dovecot (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
-  pkgng: name=dovecot,dovecot-sieve state=present
+  pkgng: name=dovecot2 state=present
   notify: restart dovecot
 - name: Enable Dovecot (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
