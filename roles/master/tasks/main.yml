@@ -1,18 +1,18 @@
-- name: Create OpenDKIM user
+- name: Create opendkim user
   user: >
     name=opendkim
     createhome=no
     comment=OpenDKIM
     shell=/usr/sbin/nologin
     home=/usr/local/etc/mail/
-- name: Creates OpenDKIM directory
+- name: Creates opendkim db
   file: >
     path=/var/db/opendkim
     state=directory
     owner=opendkim
     group=opendkim
     mode=0770
-- name: Paste OpenDKIM config
+- name: Paste opendkim config
   notify: restart opendkim
   template: >
     src=opendkim.conf
@@ -21,7 +21,7 @@
     group=opendkim
     mode=0770
 
-- name: Paste Dovecot config
+- name: Paste dovecot config
   notify: restart dovecot
   template: >
     src=dovecot.conf
@@ -30,7 +30,7 @@
     group=dovecot
     mode=0770
 
-- name: Paste main Postfix config
+- name: Paste main config
   notify: restart postfix
   template: >
     src=main.cf
@@ -39,68 +39,80 @@
     group=wheel
     mode=0644
 
-- name: Paste access Postfix config
+- name: Paste access config
   notify: restart postfix
+  register: access
   template: >
     src=access
     dest=/usr/local/etc/postfix/access
     owner=root
     group=wheel
     mode=0644
-- name: Map access Postfix config
+- name: Map access config
+  when: access.changed
   shell: postmap /usr/local/etc/postfix/access
 
-- name: Paste canonical Postfix config
+- name: Paste canonical config
   notify: restart postfix
+  register: canonical
   template: >
     src=canonical
     dest=/usr/local/etc/postfix/canonical
     owner=root
     group=wheel
     mode=0644
-- name: Map access Postfix config
+- name: Map access config
+  when: canonical.changed
   shell: postmap /usr/local/etc/postfix/canonical
 
-- name: Paste generic Postfix config
+- name: Paste generic config
   notify: restart postfix
+  register: generic
   template: >
     src=generic
     dest=/usr/local/etc/postfix/generic
     owner=root
     group=wheel
     mode=0644
-- name: Map access Postfix config
+- name: Map generic config
+  when: generic.changed
   shell: postmap /usr/local/etc/postfix/generic
 
-- name: Paste virtual Postfix config
+- name: Paste virtual config
   notify: restart postfix
+  register: virtual
   template: >
     src=virtual
     dest=/usr/local/etc/postfix/virtual
     owner=root
     group=wheel
     mode=0644
-- name: Map access Postfix config
+- name: Map virtual config
+  when: virtual.changed
   shell: postmap /usr/local/etc/postfix/virtual
 
-- name: Paste vmailbox Postfix config
+- name: Paste vmailbox config
   notify: restart postfix
+  register: vmailbox
   template: >
     src=vmailbox
     dest=/usr/local/etc/postfix/vmailbox
     owner=root
     group=wheel
     mode=0644
-- name: Map access Postfix config
+- name: Map access config
+  when: vmailbox.changed
   shell: postmap /usr/local/etc/postfix/vmailbox
-  
-- name: Paste aliases Postfix config
+
+- name: Paste aliases config
   notify: restart postfix
+  register: aliases
   template: >
     src=aliases
     dest=/etc/aliases
     owner=root
     group=wheel
     mode=0644
-- name: Map aliases Postfix config
+- name: Map aliases config
+  when: aliases.changed
   shell: newaliases

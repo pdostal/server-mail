@@ -1,4 +1,4 @@
-- name: Paste Postfix config
+- name: Paste main config
   notify: restart postfix
   template: >
     src=main.cf
