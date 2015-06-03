@@ -2,6 +2,6 @@
   hosts: all
   sudo: true
   roles:
-  - { role: base }
-  - { role: master, when: ansible_hostname in groups.master }
-  - { role: slave, when: ansible_hostname in groups.slave }
+  - { role: install, tags: [ 'install', 'master', 'slave' ] }
+  - { role: master, tags: [ 'configure', 'master' ], when: ansible_hostname in groups.master }
+  - { role: slave, tags: [ 'configure', 'slave' ], when: ansible_hostname in groups.slave }

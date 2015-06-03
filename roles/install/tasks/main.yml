@@ -1,0 +1,31 @@
+- name: Install Postfix (Debian)
+  when: ansible_distribution == 'Debian'
+  apt: name=postfix state=latest force=yes
+  notify: restart postfix
+- name: Install Postfix (CentOS)
+  when: ansible_distribution == 'CentOS'
+  yum: name=postfix state=latest
+  notify: restart postfix
+- name: Install Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  pkgng: name=postfix state=present
+  notify: restart postfix
+- name: Enable Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^postfix_enable= line=postfix_enable=YES
+
+- name: Install OpenDKIM (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  pkgng: name=opendkim state=present
+  notify: restart opendkim
+- name: Enable OpenDKIM (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=^milteropendkim_enable= line=milteropendkim_enable=YES
+
+- name: Install Dovecot (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  pkgng: name=dovecot,dovecot-sieve state=present
+  notify: restart dovecot
+- name: Enable Dovecot (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=^dovecot_enable= line=dovecot_enable=YES

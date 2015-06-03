@@ -1,10 +1,3 @@
-- name: Install OpenDKIM (FreeBSD)
-  when: ansible_distribution == 'FreeBSD'
-  pkgng: name=opendkim state=present
-  notify: restart opendkim
-- name: Enable OpenDKIM (FreeBSD)
-  when: ansible_distribution == 'FreeBSD'
-  lineinfile: dest=/etc/rc.conf regexp=^milteropendkim_enable= line=milteropendkim_enable=YES
 - name: Create OpenDKIM user
   user: >
     name=opendkim
@@ -28,13 +21,6 @@
     group=opendkim
     mode=0770
 
-- name: Install Dovecot (FreeBSD)
-  when: ansible_distribution == 'FreeBSD'
-  pkgng: name=dovecot,dovecot-sieve state=present
-  notify: restart dovecot
-- name: Enable Dovecot (FreeBSD)
-  when: ansible_distribution == 'FreeBSD'
-  lineinfile: dest=/etc/rc.conf regexp=^dovecot_enable= line=dovecot_enable=YES
 - name: Paste Dovecot config
   notify: restart dovecot
   template: >
@@ -52,6 +38,7 @@
     owner=root
     group=wheel
     mode=0644
+
 - name: Paste access Postfix config
   notify: restart postfix
   template: >
@@ -62,6 +49,7 @@
     mode=0644
 - name: Map access Postfix config
   shell: postmap /usr/local/etc/postfix/access
+
 - name: Paste canonical Postfix config
   notify: restart postfix
   template: >
@@ -72,6 +60,7 @@
     mode=0644
 - name: Map access Postfix config
   shell: postmap /usr/local/etc/postfix/canonical
+
 - name: Paste generic Postfix config
   notify: restart postfix
   template: >
@@ -82,6 +71,7 @@
     mode=0644
 - name: Map access Postfix config
   shell: postmap /usr/local/etc/postfix/generic
+
 - name: Paste virtual Postfix config
   notify: restart postfix
   template: >
@@ -92,6 +82,7 @@
     mode=0644
 - name: Map access Postfix config
   shell: postmap /usr/local/etc/postfix/virtual
+
 - name: Paste vmailbox Postfix config
   notify: restart postfix
   template: >
@@ -102,6 +93,7 @@
     mode=0644
 - name: Map access Postfix config
   shell: postmap /usr/local/etc/postfix/vmailbox
+  
 - name: Paste aliases Postfix config
   notify: restart postfix
   template: >
