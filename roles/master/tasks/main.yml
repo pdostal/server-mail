@@ -44,11 +44,51 @@
     group=dovecot
     mode=0770
 
-- name: Paste Postfix config
+- name: Paste main Postfix config
   notify: restart postfix
   template: >
     src=main.cf
     dest=/usr/local/etc/postfix/main.cf
+    owner=root
+    group=wheel
+    mode=0644
+- name: Paste access Postfix config
+  notify: restart postfix
+  template: >
+    src=access
+    dest=/usr/local/etc/postfix/access
+    owner=root
+    group=wheel
+    mode=0644
+- name: Paste canonical Postfix config
+  notify: restart postfix
+  template: >
+    src=canonical
+    dest=/usr/local/etc/postfix/canonical
+    owner=root
+    group=wheel
+    mode=0644
+- name: Paste generic Postfix config
+  notify: restart postfix
+  template: >
+    src=generic
+    dest=/usr/local/etc/postfix/generic
+    owner=root
+    group=wheel
+    mode=0644
+- name: Paste virtual Postfix config
+  notify: restart postfix
+  template: >
+    src=virtual
+    dest=/usr/local/etc/postfix/virtual
+    owner=root
+    group=wheel
+    mode=0644
+- name: Paste vmailbox Postfix config
+  notify: restart postfix
+  template: >
+    src=vmailbox
+    dest=/usr/local/etc/postfix/vmailbox
     owner=root
     group=wheel
     mode=0644

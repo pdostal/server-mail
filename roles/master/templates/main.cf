@@ -10,18 +10,17 @@ inet_protocols = all
 
 virtual_mailbox_domains = pdostal.cz, lsimral.cz, jsindelar.cz
 virtual_mailbox_base = /var/mail/virtual
-virtual_mailbox_maps = hash:/etc/postfix/vmailbox
-virtual_alias_maps = hash:/etc/postfix/virtual
+virtual_mailbox_maps = hash:/usr/local/etc/postfix/vmailbox
+virtual_alias_maps = hash:/usr/local/etc/postfix/virtual
 
 #local_transport = error:no local mailboxes
 local_transport = local:$myhostname
 local_recipient_maps = proxy:unix:passwd.byname $alias_maps
 
-#postalias /etc/aliases
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
-smtp_generic_maps = hash:/etc/postfix/generic
-sender_canonical_maps = hash:/etc/postfix/canonical
+smtp_generic_maps = hash:/usr/local/etc/postfix/generic
+sender_canonical_maps = hash:/usr/local/etc/postfix/canonical
 
 home_mailbox = /var/mail/%u/
 
@@ -30,7 +29,7 @@ mynetworks = 127.0.0.0/8, [::1]/128
 smtpd_client_restrictions =
   permit_mynetworks,
   permit_sasl_authenticated,
-  check_sender_access hash:/etc/postfix/access,
+  check_sender_access hash:/usr/local/etc/postfix/access,
   permit
 
 smtpd_sender_restrictions =
@@ -38,7 +37,7 @@ smtpd_sender_restrictions =
   permit_sasl_authenticated,
   reject_non_fqdn_sender,
   reject_unknown_sender_domain,
-  check_sender_access hash:/etc/postfix/access,
+  check_sender_access hash:/usr/local/etc/postfix/access,
   permit
 
 smtpd_recipient_restrictions =
@@ -46,7 +45,7 @@ smtpd_recipient_restrictions =
   permit_sasl_authenticated,
   reject_non_fqdn_recipient,
   reject_unknown_recipient_domain,
-  check_recipient_access hash:/etc/postfix/access,
+  check_recipient_access hash:/usr/local/etc/postfix/access,
   reject_unauth_destination,
   check_policy_service unix:private/policyd-spf,
   permit

@@ -10,7 +10,6 @@ mynetworks = 127.0.0.0/8, [::1]/128
 
 smtpd_etrn_restrictions =
   sleep 5,
- #check_etrn_access hash:/etc/postfix/etrn,
   permit_mynetworks,
  #reject
   permit

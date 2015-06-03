@@ -1,0 +1,4 @@
+# postmap /etc/postfix/generic
+
+pdostal@me.com pdostal@pdostal.cz
+pdostal@icloud.com pdostal@pdostal.cz
