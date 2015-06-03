@@ -102,3 +102,13 @@
     mode=0644
 - name: Map access Postfix config
   shell: postmap /usr/local/etc/postfix/vmailbox
+- name: Paste aliases Postfix config
+  notify: restart postfix
+  template: >
+    src=aliases
+    dest=/etc/aliases
+    owner=root
+    group=wheel
+    mode=0644
+- name: Map aliases Postfix config
+  shell: newaliases
