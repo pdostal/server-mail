@@ -60,6 +60,8 @@
     owner=root
     group=wheel
     mode=0644
+- name: Map access Postfix config
+  shell: postmap /usr/local/etc/postfix/access
 - name: Paste canonical Postfix config
   notify: restart postfix
   template: >
@@ -68,6 +70,8 @@
     owner=root
     group=wheel
     mode=0644
+- name: Map access Postfix config
+  shell: postmap /usr/local/etc/postfix/canonical
 - name: Paste generic Postfix config
   notify: restart postfix
   template: >
@@ -76,6 +80,8 @@
     owner=root
     group=wheel
     mode=0644
+- name: Map access Postfix config
+  shell: postmap /usr/local/etc/postfix/generic
 - name: Paste virtual Postfix config
   notify: restart postfix
   template: >
@@ -84,6 +90,8 @@
     owner=root
     group=wheel
     mode=0644
+- name: Map access Postfix config
+  shell: postmap /usr/local/etc/postfix/virtual
 - name: Paste vmailbox Postfix config
   notify: restart postfix
   template: >
@@ -92,3 +100,5 @@
     owner=root
     group=wheel
     mode=0644
+- name: Map access Postfix config
+  shell: postmap /usr/local/etc/postfix/vmailbox
