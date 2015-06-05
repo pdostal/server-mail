@@ -39,6 +39,19 @@
     group=wheel
     mode=0644
 
+- name: Paste mynetworks config
+  notify: restart postfix
+  register: mynetworks
+  template: >
+    src=mynetworks
+    dest=/usr/local/etc/postfix/mynetworks
+    owner=root
+    group=wheel
+    mode=0644
+- name: Map mynetworks config
+  when: mynetworks.changed
+  shell: postmap /usr/local/etc/postfix/mynetworks
+
 - name: Paste access config
   notify: restart postfix
   register: access

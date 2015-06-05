@@ -1,0 +1,9 @@
+127.0.0.0/8
+[::1]/128
+
+{{ ansible_tap0.ipv4[0].network }}/24
+
+{% for item in groups.all %}
+  {{ hostvars[item].ipv4 }}
+  {{ hostvars[item].ipv6 }}
+{% endfor %}

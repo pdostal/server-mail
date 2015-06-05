@@ -24,7 +24,7 @@ sender_canonical_maps = hash:/usr/local/etc/postfix/canonical
 
 home_mailbox = /var/mail/%u/
 
-mynetworks = 127.0.0.0/8, [::1]/128
+mynetworks = hash:/usr/local/etc/postfix/mynetworks
 
 smtpd_client_restrictions =
   permit_mynetworks,
