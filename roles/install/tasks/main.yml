@@ -14,6 +14,19 @@
   when: ansible_distribution == 'FreeBSD'
   lineinfile: dest=/etc/rc.conf regexp=^postfix_enable= line=postfix_enable=YES
 
+- name: "Disable Sendmail #1 (FreeBSD)"
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_enable= line=sendmail_enable=NO
+- name: "Disable Sendmail #2 (FreeBSD)"
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_submit_enable= line=sendmail_submit_enable=NO
+- name: "Disable Sendmail #3 (FreeBSD)"
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_outbound_enable= line=sendmail_outbound_enable=NO
+- name: "Disable Sendmail #4 (FreeBSD)"
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_msp_queue_enable= line=sendmail_msp_queue_enable=NO
+
 - name: Install OpenDKIM (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
   pkgng: name=opendkim state=present
