@@ -74,7 +74,7 @@
     owner=root
     group=wheel
     mode=0644
-- name: Map access config
+- name: Map canonical config
   when: canonical.changed
   shell: postmap /usr/local/etc/postfix/canonical
 
