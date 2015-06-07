@@ -1,9 +1,4 @@
-# postmap /etc/postfix/virtual
-
-## pdostal.cz
-
-postmaster@pdostal.cz  pdostal@pdostal.cz
-abuse@pdostal.cz	     pdostal@pdostal.cz
-root@pdostal.cz        pdostal@pdostal.cz
-
-@pdostal.cz		pavel
+postmaster@pdostal.cz pdostal@pdostal.cz
+abuse@pdostal.cz      pdostal@pdostal.cz
+root@pdostal.cz       pdostal@pdostal.cz
+@pdostal.cz           pavel
