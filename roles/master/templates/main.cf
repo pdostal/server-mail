@@ -3,7 +3,7 @@ mydomain = pdostal.cz
 myhostname = $myorigin.$mydomain
 mydestination = $myhostname, vps, localhost
 
-mailbox_command = /usr/lib/dovecot/deliver
+mailbox_command = /usr/local/libexec/dovecot/deliver
 
 inet_interfaces = all
 inet_protocols = all
