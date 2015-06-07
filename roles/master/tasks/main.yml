@@ -29,6 +29,14 @@
     owner=dovecot
     group=dovecot
     mode=0770
+- name: Paste dovecot pam
+  notify: restart dovecot
+  template: >
+    src=dovecot.pam
+    dest=/usr/local/etc/pam.d/dovecot
+    owner=root
+    group=root
+    mode=0644
 
 - name: Paste main config
   notify: restart postfix
