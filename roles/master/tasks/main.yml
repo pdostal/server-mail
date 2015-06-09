@@ -35,7 +35,7 @@
     src=dovecot.pam
     dest=/usr/local/etc/pam.d/dovecot
     owner=root
-    group=root
+    group=wheel
     mode=0644
 
 - name: Paste main config
