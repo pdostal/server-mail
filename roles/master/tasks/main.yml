@@ -26,9 +26,9 @@
   template: >
     src=dovecot.conf
     dest=/usr/local/etc/dovecot/dovecot.conf
-    owner=dovecot
-    group=dovecot
-    mode=0770
+    owner=root
+    group=wheel
+    mode=0644
 - name: Paste dovecot pam
   notify: restart dovecot
   template: >
