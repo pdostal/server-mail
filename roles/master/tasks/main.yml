@@ -56,6 +56,9 @@
     owner=root
     group=wheel
     mode=0644
+- name: Remove old mynetworks db
+  when: mynetworks.changed
+  shell: rm /usr/local/etc/postfix/mynetworks.db
 - name: Map mynetworks config
   when: mynetworks.changed
   shell: postmap /usr/local/etc/postfix/mynetworks
@@ -69,6 +72,9 @@
     owner=root
     group=wheel
     mode=0644
+- name: Remove old access db
+  when: access.changed
+  shell: rm /usr/local/etc/postfix/access.db
 - name: Map access config
   when: access.changed
   shell: postmap /usr/local/etc/postfix/access
@@ -82,6 +88,9 @@
     owner=root
     group=wheel
     mode=0644
+- name: Remove old canonical db
+  when: canonical.changed
+  shell: rm /usr/local/etc/postfix/canonical.db
 - name: Map canonical config
   when: canonical.changed
   shell: postmap /usr/local/etc/postfix/canonical
@@ -95,6 +104,9 @@
     owner=root
     group=wheel
     mode=0644
+- name: Remove old generic db
+  when: generic.changed
+  shell: rm /usr/local/etc/postfix/generic.db
 - name: Map generic config
   when: generic.changed
   shell: postmap /usr/local/etc/postfix/generic
@@ -108,6 +120,9 @@
     owner=root
     group=wheel
     mode=0644
+- name: Remove old virtual db
+  when: virtual.changed
+  shell: rm /usr/local/etc/postfix/virtual.db
 - name: Map virtual config
   when: virtual.changed
   shell: postmap /usr/local/etc/postfix/virtual
@@ -121,6 +136,9 @@
     owner=root
     group=wheel
     mode=0644
+- name: Remove old vmailbox db
+  when: vmailbox.changed
+  shell: rm /usr/local/etc/postfix/vmailbox.db
 - name: Map access config
   when: vmailbox.changed
   shell: postmap /usr/local/etc/postfix/vmailbox
