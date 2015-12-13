@@ -1,7 +1,7 @@
 myorigin = {{ origin }}
 mydomain = pdostal.cz
 myhostname = $myorigin.$mydomain
-mydestination = $myhostname, vps, localhost
+mydestination = $myhostname, localhost
 
 mailbox_command = /usr/local/libexec/dovecot/deliver
 
@@ -83,6 +83,7 @@ delay_warning_time = 4h
 #smtpd_tls_auth_only = yes
 smtpd_tls_security_level = may
 smtpd_tls_auth_only = no
+#openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -out /etc/ssl/certs/mailcert.pem -keyout /etc/ssl/private/mail.key
 smtpd_tls_cert_file = /etc/ssl/certs/mail.pem
 smtpd_tls_key_file = /etc/ssl/private/mail.pem
 smtpd_tls_received_header = yes

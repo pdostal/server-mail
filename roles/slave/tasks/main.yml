@@ -1,7 +1,17 @@
+- set_fact:
+    postfix_conf: /usr/local/etc/postfix/
+  when: ansible_distribution == 'FreeBSD'
+- set_fact:
+    postfix_conf: /etc/postfix/
+  when: ansible_system == 'Linux'
+
 - name: Install Postfix (Debian)
   when: ansible_distribution == 'Debian'
   apt: name=postfix state=latest force=yes
   notify: restart postfix
+- name: Install Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  pkgng: name=postfix state=present
 
 - name: Enable Postfix (FreeBSD)
   when: ansible_distribution == 'FreeBSD'
@@ -15,4 +25,4 @@
 
 - name: Paste main config
   notify: restart postfix
-  template: src=main.cf dest=/etc/postfix/main.cf owner=root group=root mode=0644
+  template: src=main.cf dest={{ postfix_conf }}main.cf mode=0644

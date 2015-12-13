@@ -4,7 +4,7 @@ myhostname = $myorigin.$mydomain
 relay_domains = pdostal.cz
 
 relayhost = mx1.pdostal.cz
-mydestination = 
+mydestination =
 
 inet_interfaces = all
 inet_protocols = all
@@ -46,6 +46,7 @@ delay_warning_time = 4h
 
 smtpd_tls_security_level = encrypt
 smtpd_tls_auth_only = yes
+#openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -out /etc/ssl/certs/mail.pem -keyout /etc/ssl/private/mail.key
 smtpd_tls_cert_file = /etc/ssl/certs/mail.pem
 smtpd_tls_key_file = /etc/ssl/private/mail.pem
 smtpd_tls_received_header = yes
