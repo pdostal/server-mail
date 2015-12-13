@@ -1,7 +1,0 @@
-- name: restart postfix
-  service: name=postfix state=restarted
-- name: restart opendkim
-  service: name=milter-opendkim state=restarted
-- name: restart dovecot
-  service: name=milter-opendkim state=restarted
-  

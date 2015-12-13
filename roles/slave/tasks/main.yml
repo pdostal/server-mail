@@ -1,8 +1,18 @@
+- name: Install Postfix (Debian)
+  when: ansible_distribution == 'Debian'
+  apt: name=postfix state=latest force=yes
+  notify: restart postfix
+
+- name: Enable Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^postfix_enable= line=postfix_enable=YES
+- name: "Disable Sendmail (FreeBSD)"
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_enable= line=sendmail_enable=NO
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_submit_enable= line=sendmail_submit_enable=NO
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_outbound_enable= line=sendmail_outbound_enable=NO
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_msp_queue_enable= line=sendmail_msp_queue_enable=NO
+
 - name: Paste main config
   notify: restart postfix
-  template: >
-    src=main.cf
-    dest=/etc/postfix/main.cf
-    owner=root
-    group=root
-    mode=0644
+  template: src=main.cf dest=/etc/postfix/main.cf owner=root group=root mode=0644

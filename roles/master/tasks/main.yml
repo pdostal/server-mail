@@ -1,3 +1,40 @@
+- name: Install Postfix (Debian)
+  when: ansible_distribution == 'Debian'
+  apt: name=postfix state=latest force=yes
+  notify: restart postfix
+
+- name: Enable Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^postfix_enable= line=postfix_enable=YES
+- name: Enable SMTPS (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/usr/local/etc/postfix/master.cf regexp=^smtps line="smtps     inet  n       -       n       -       -       smtpd -o smtpd_tls_wrappermode=yes"
+- name: "Disable Sendmail (FreeBSD)"
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_enable= line=sendmail_enable=NO
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_submit_enable= line=sendmail_submit_enable=NO
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_outbound_enable= line=sendmail_outbound_enable=NO
+  lineinfile: dest=/etc/rc.conf regexp=^sendmail_msp_queue_enable= line=sendmail_msp_queue_enable=NO
+
+- name: Install Policyd (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  pkgng: name=py27-postfix-policyd-spf-python state=present
+- name: Enable Policyd (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/usr/local/etc/postfix/master.cf regexp=^policyd-spf line="policyd-spf unix  -       n       n       -       0       spawn user=nobody argv=/usr/local/bin/policyd-spf"
+
+- name: Install OpenDKIM (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  pkgng: name=opendkim state=present
+  notify: restart opendkim
+  notify: restart postfix
+- name: Enable OpenDKIM (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=^milteropendkim_enable= line=milteropendkim_enable=YES
+- name: Set OpenDKIM UUID (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=^milteropendkim_uid= line=milteropendkim_uid=opendkim
+
 - name: Create opendkim user
   user: >
     name=opendkim
@@ -20,7 +57,10 @@
     owner=opendkim
     group=opendkim
     mode=0770
-
+    
+- name: Enable Dovecot (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=^dovecot_enable= line=dovecot_enable=YES
 - name: Paste dovecot config
   notify: restart dovecot
   template: >
