@@ -3,7 +3,7 @@ mydomain = pdostal.cz
 myhostname = $myorigin.$mydomain
 relay_domains = pdostal.cz
 
-relayhost = mx1.pdostal.cz
+relayhost = rhubarb.pdostal.cz
 mydestination =
 
 inet_interfaces = all
