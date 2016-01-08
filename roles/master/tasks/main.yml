@@ -21,7 +21,7 @@
   pkgng: name=py27-postfix-policyd-spf-python state=present
 - name: Enable Policyd (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
-  lineinfile: dest=/usr/local/etc/postfix/master.cf regexp=^policyd-spf line="policyd-spf unix  -       n       n       -       0       spawn user=nobody argv=/usr/local/bin/policyd-spf"
+  lineinfile: dest=/usr/local/etc/postfix/master.cf regexp=policyd-spf line="#policyd-spf unix  -       n       n       -       0       spawn user=nobody argv=/usr/local/bin/policyd-spf"
 
 - name: Install OpenDKIM (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
