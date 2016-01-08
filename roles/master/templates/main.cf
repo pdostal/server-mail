@@ -1,7 +1,18 @@
+# Ansible main.cf master config
+{% set origins = [] %}
+{% for item in groups.all %}
+{% do origins.append(hostvars[item].origin) %}
+{% endfor %}
+{% set destinations = [] %}
+{% for item in groups.all %}
+{% do destinations.append(hostvars[item].origin+".pdostal.cz") %}
+{% endfor %}
+# For: {{ origins | join(", ") }}
+
 myorigin = {{ origin }}
 mydomain = pdostal.cz
 myhostname = $myorigin.$mydomain
-mydestination = $myhostname, localhost
+mydestination = localhost, {{ origins | join(", ") }}, {{ destinations | join(", ") }}
 
 mailbox_command = /usr/local/libexec/dovecot/deliver
 
