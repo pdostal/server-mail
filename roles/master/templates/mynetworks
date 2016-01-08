@@ -1,9 +1,10 @@
 # mynetworks
 
 127.0.0.0/8 localhost4
-[::1]/128 localhost6
+::1/128 localhost6
 
-{{ ansible_tap0.ipv4[0].network }}/24 vps4
+172.26.26.0/24 vpn4
+2001:470:734b:27::/64 vpn6
 
 {% for item in groups.all %}
 {{ hostvars[item].ipv4 }} {{ hostvars[item].ansible_hostname }}4
