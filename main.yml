@@ -1,4 +1,4 @@
-- name: firewall
+- name: Mail
   hosts: all
   sudo: true
   roles:
