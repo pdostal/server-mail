@@ -190,3 +190,17 @@
 - name: Map aliases config
   when: aliases.changed
   shell: newaliases
+
+- name: Disable sendmail (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=sendmail_enable line=sendmail_enable=NO
+- name: Disable sendmail (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=sendmail_submit_enable line=sendmail_submit_enable=NO
+- name: Disable sendmail (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=sendmail_outbound_enable line=sendmail_outbound_enable=NO
+- name: Disable sendmail (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=sendmail_msp_queue_enable line=sendmail_msp_queue_enable=NO
+
