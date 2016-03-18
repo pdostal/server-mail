@@ -47,7 +47,7 @@ smtpd_sender_restrictions =
   permit_mynetworks,
   permit_sasl_authenticated,
   reject_non_fqdn_sender,
-  reject_unknown_sender_domain,
+  #reject_unknown_sender_domain,
   check_sender_access hash:/usr/local/etc/postfix/access,
   permit
 
@@ -70,8 +70,8 @@ mailbox_size_limit = 2048000000
 
 milter_protocol = 2
 milter_default_action = accept
-smtpd_milters = inet:localhost:12301
-non_smtpd_milters = inet:localhost:12301
+smtpd_milters = inet:127.0.0.1:12301
+non_smtpd_milters = inet:127.0.0.1:12301
 
 smtpd_delay_reject = no
 smtpd_error_sleep_time = 30

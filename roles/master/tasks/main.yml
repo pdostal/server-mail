@@ -9,19 +9,55 @@
 - name: Enable SMTPS (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
   lineinfile: dest=/usr/local/etc/postfix/master.cf regexp=^smtps line="smtps     inet  n       -       n       -       -       smtpd -o smtpd_tls_wrappermode=yes"
-- name: "Disable Sendmail (FreeBSD)"
-  when: ansible_distribution == 'FreeBSD'
-  lineinfile: dest=/etc/rc.conf regexp=^sendmail_enable= line=sendmail_enable=NO
-  lineinfile: dest=/etc/rc.conf regexp=^sendmail_submit_enable= line=sendmail_submit_enable=NO
-  lineinfile: dest=/etc/rc.conf regexp=^sendmail_outbound_enable= line=sendmail_outbound_enable=NO
-  lineinfile: dest=/etc/rc.conf regexp=^sendmail_msp_queue_enable= line=sendmail_msp_queue_enable=NO
 
+# DISABLED
 - name: Install Policyd (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
   pkgng: name=py27-postfix-policyd-spf-python state=present
 - name: Enable Policyd (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
   lineinfile: dest=/usr/local/etc/postfix/master.cf regexp=policyd-spf line="#policyd-spf unix  -       n       n       -       0       spawn user=nobody argv=/usr/local/bin/policyd-spf"
+
+- name: Install spamassassin (FreeBSD)
+  notify: restart spamassassin
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  pkgng: name=spamassassin state=present
+- name: Enable spamassassin (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  notify: restart postfix
+  notify: restart spamassassin
+  lineinfile: dest=/etc/rc.conf regexp=^spamd_enable= line=spamd_enable=YES
+- name: Enable SPF spamassassin plugin (FreeBSD)
+  notify: restart postfix
+  notify: restart spamassassin
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: >
+    dest=/usr/local/etc/mail/spamassassin/init.pre
+    regexp="loadplugin Mail::SpamAssassin::Plugin::SPF"
+    line="loadplugin Mail::SpamAssassin::Plugin::SPF"
+- name: Configure spamassassin (FreeBSD)
+  notify: restart postfix
+  notify: restart spamassassin
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  template: >
+    src=spamassasin.cf
+    dest=/usr/local/etc/mail/spamassassin/local.cf
+- name: Enable spamassassin in postfix (FreeBSD)
+  notify: restart postfix
+  notify: restart spamassassin
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: >
+    dest=/usr/local/etc/postfix/master.cf
+    regexp="smtp      inet  n       -       n       -       -       smtpd"
+    line="smtp      inet  n       -       -       -       -       smtpd -o content_filter=spamassassin"
+- name: Add spamassassin rune to postfix (FreeBSD)
+  notify: restart postfix
+  notify: restart spamassassin
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: >
+    dest=/usr/local/etc/postfix/master.cf
+    regexp="spamassassin unix -     n       n       -       -       pipe user=spamd argv=/usr/local/bin/spamc -f -e /usr/sbin/sendmail -oi -f ${sender} ${recipient}"
+    line="spamassassin unix -     n       n       -       -       pipe user=spamd argv=/usr/local/bin/spamc -f -e /usr/sbin/sendmail -oi -f ${sender} ${recipient}"
 
 - name: Install OpenDKIM (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
@@ -34,6 +70,9 @@
 - name: Set OpenDKIM UUID (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
   lineinfile: dest=/etc/rc.conf regexp=^milteropendkim_uid= line=milteropendkim_uid=opendkim
+- name: Set OpenDKIM conf (FreeBSD)
+  when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
+  lineinfile: dest=/etc/rc.conf regexp=^milteropendkim_cfgfile= line=milteropendkim_cfgfile=/usr/local/etc/mail/opendkim.conf
 
 - name: Create opendkim user
   user: >

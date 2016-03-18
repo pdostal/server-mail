@@ -1,5 +1,7 @@
 - name: restart postfix
   service: name=postfix state=restarted
+- name: restart spamassassin
+  service: name=sa-spamd state=restarted
 - name: restart opendkim
   service: name=milter-opendkim state=restarted
 - name: restart dovecot
