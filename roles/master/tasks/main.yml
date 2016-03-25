@@ -48,7 +48,7 @@
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
   lineinfile: >
     dest=/usr/local/etc/postfix/master.cf
-    regexp="smtp      inet  n       -       n       -       -       smtpd"
+    regexp="smtp      inet"
     line="smtp      inet  n       -       -       -       -       smtpd -o content_filter=spamassassin"
 - name: Add spamassassin rune to postfix (FreeBSD)
   notify: restart postfix
@@ -56,7 +56,7 @@
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
   lineinfile: >
     dest=/usr/local/etc/postfix/master.cf
-    regexp="spamassassin unix -     n       n       -       -       pipe user=spamd argv=/usr/local/bin/spamc -f -e /usr/sbin/sendmail -oi -f ${sender} ${recipient}"
+    regexp="spamassassin unix"
     line="spamassassin unix -     n       n       -       -       pipe user=spamd argv=/usr/local/bin/spamc -f -e /usr/sbin/sendmail -oi -f ${sender} ${recipient}"
 
 - name: Install OpenDKIM (FreeBSD)
