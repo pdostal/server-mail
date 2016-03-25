@@ -228,7 +228,7 @@
     mode=0644
 - name: Map aliases config
   when: aliases.changed
-  shell: newaliases
+  shell: postmap /etc/aliases
 
 - name: Disable sendmail (FreeBSD)
   when: ansible_distribution == 'FreeBSD' and ansible_hostname in groups.master
