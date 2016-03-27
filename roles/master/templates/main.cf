@@ -54,6 +54,10 @@ smtpd_sender_restrictions =
 smtpd_recipient_restrictions =
   permit_mynetworks,
   permit_sasl_authenticated,
+  reject_rbl_client zen.spamhaus.org,
+  reject_rbl_client bl.spamcop.net,
+  reject_rbl_client b.barracudacentral.org,
+  reject_rbl_client dnsbl.sorbs.net,
   reject_non_fqdn_recipient,
   reject_unknown_recipient_domain,
   check_recipient_access hash:/usr/local/etc/postfix/access,
