@@ -1,0 +1,55 @@
+- set_fact:
+    postfix_conf: /usr/local/etc/postfix/
+  when: ansible_distribution == 'FreeBSD'
+- set_fact:
+    postfix_conf: /etc/postfix/
+  when: ansible_system == 'Linux'
+
+- name: Install Postfix (Debian)
+  when: ansible_distribution == 'Debian'
+  apt: name=postfix state=latest force=yes
+  notify: restart postfix
+- name: Install Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  pkgng: name=postfix state=present
+
+- name: Enable Postfix (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  lineinfile: >
+    dest=/etc/rc.conf
+    regexp="^postfix_enable="
+    line="postfix_enable=YES"
+
+- name: Uninstall master stuff (FreeBSD)
+  when: ansible_distribution == 'FreeBSD'
+  pkgng: name={{ item }} state=absent
+  with_items:
+  - py27-postfix-policyd-spf-python
+  - spamassassin
+  - opendkim
+  - dovecot
+
+- name: Paste mailname
+  notify: restart postfix
+  template: >
+    src=mailname
+    dest=/etc/mailname
+    mode=0644
+
+- name: Paste aliases config
+  notify: restart postfix
+  register: aliases
+  template: >
+    src=aliases
+    dest=/etc/aliases
+    mode=0644
+- name: Map aliases config
+  when: aliases.changed
+  shell: postmap /etc/aliases
+
+- name: Paste main config
+  notify: restart postfix
+  template: >
+    src=main.cf
+    dest={{postfix_conf}}main.cf
+    mode=0644

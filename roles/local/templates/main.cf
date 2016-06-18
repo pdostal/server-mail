@@ -1,0 +1,39 @@
+myorigin = /etc/mailname
+myhostname = {{ origin }}.pdostal.cz
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mydestination = $myhostname, localhost.localdomain
+inet_interfaces = loopback-only
+
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+
+smtpd_relay_restrictions = permit_mynetworks defer_unauth_destination
+
+smtpd_banner = $myhostname ESMTP $mail_name
+append_dot_mydomain = no
+biff = no
+
+recipient_delimiter = +
+mailbox_command = procmail -a "$EXTENSION"
+
+#openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -out /etc/ssl/certs/mail.pem -keyout /etc/ssl/private/mail.key
+smtpd_tls_cert_file = /etc/ssl/certs/mail.pem
+smtpd_tls_key_file = /etc/ssl/private/mail.pem
+
+smtpd_tls_received_header = yes
+smtpd_tls_security_level = may
+smtpd_tls_auth_only = no
+smtpd_tls_loglevel = 1
+smtpd_use_tls=yes
+
+message_size_limit = 102400000
+mailbox_size_limit = 2048000000
+
+delay_warning_time = 4h
+smtpd_delay_reject = no
+smtpd_error_sleep_time = 30
+smtpd_soft_error_limit = 10
+smtpd_hard_error_limit = 20
+
+smtpd_helo_required = yes
+disable_vrfy_command = yes
