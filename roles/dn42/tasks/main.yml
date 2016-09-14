@@ -1,0 +1,26 @@
+- set_fact:
+    postfix_conf: /usr/local/etc/postfix/
+  when: ansible_distribution == 'FreeBSD'
+- set_fact:
+    postfix_conf: /etc/postfix/
+  when: ansible_system == 'Linux'
+
+- name: Enable dn42
+  when: ansible_hostname in groups['dn42']
+  lineinfile: >
+    dest={{postfix_conf}}master.cf
+    regexp="^out_dn42"
+    line="out_dn42  unix -       -       n       -       -       smtp -o smtp_bind_address=172.22.149.114 -o smtp_helo_name={{ ansible_hostname }}.pdostal.dn42 -o syslog_name=postfix-dn42"
+  # -o smtp_bind_address6=fd70:96c9:ef25::1
+
+- name: Paste transport config
+  when: ansible_hostname in groups['dn42']
+  notify: restart postfix
+  register: transport
+  template: >
+    src=transport
+    dest=/etc/postfix/transport
+    mode=0644
+- name: Map transport config
+  when: transport.changed
+  shell: postmap /etc/postfix/transport

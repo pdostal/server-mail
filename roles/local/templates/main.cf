@@ -1,8 +1,7 @@
 myorigin = /etc/mailname
 myhostname = {{ origin }}.pdostal.cz
-mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
-mydestination = $myhostname, localhost.localdomain
-inet_interfaces = loopback-only
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.24.0.0/13
+mydestination = $myhostname, localhost.localdomain{% if ansible_hostname in groups['dn42'] %}, pdostal.dn42{% endif %}
 
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
@@ -14,7 +13,6 @@ append_dot_mydomain = no
 biff = no
 
 recipient_delimiter = +
-mailbox_command = procmail -a "$EXTENSION"
 
 #openssl req -x509 -nodes -days 3650 -newkey rsa:4096 -out /etc/ssl/certs/mail.pem -keyout /etc/ssl/private/mail.key
 smtpd_tls_cert_file = /etc/ssl/certs/mail.pem
@@ -37,3 +35,13 @@ smtpd_hard_error_limit = 20
 
 smtpd_helo_required = yes
 disable_vrfy_command = yes
+
+inet_interfaces = all
+inet_protocols = all
+
+{% if ansible_hostname in groups['dn42'] %}
+mailbox_command = /usr/local/libexec/dovecot/deliver
+home_mailbox = /var/mail/%u/
+{% else %}
+mailbox_command = procmail -a "$EXTENSION"
+{% endif %}

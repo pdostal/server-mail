@@ -5,3 +5,5 @@
   - { role: master, tags: [ 'configure', 'master' ], when: ansible_hostname in groups.master }
   - { role: slave, tags: [ 'configure', 'slave' ], when: ansible_hostname in groups.slave }
   - { role: local, tags: [ 'configure', 'local' ], when: ansible_hostname in groups.local }
+  - { role: dn42, tags: [ 'configure', 'dn42' ], when: ansible_hostname in groups.dn42 }
+  - { role: dovecot, tags: [ 'configure', 'dovecot' ], when: ansible_hostname in groups.dovecot }

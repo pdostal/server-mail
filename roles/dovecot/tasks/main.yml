@@ -1,0 +1,11 @@
+- name: Install Dovecot (Debian)
+  when: ansible_distribution == 'Debian'
+  apt: name=dovecot-imapd state=latest force=yes
+  notify: restart dovecot
+
+- name: Paste dovecot config
+  when: ansible_distribution == 'Debian'
+  notify: restart dovecot
+  template: >
+    src=dovecot.conf
+    dest=/etc/dovecot/dovecot.conf
